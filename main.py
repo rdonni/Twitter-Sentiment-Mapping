@@ -1,14 +1,18 @@
 # Imports
+import pickle
+
+from negativity_score import score
 from preprocessing import preprocessing
 from sentiments_analysis import sentiment_analysis
-from negativity_score import score
-import pickle 
 from Vizualisation.vizualisation import plot
 
 
-def main():
+def main(
+    #tweets_path : str,
+):
     # Get tweets 
     with open("/Users/rayanedonni/Documents/Projets_persos/News_by_ai/sentiment_analysis/tweets_by_countries.pkl", "rb") as handle :
+    #with open(tweets_path, "rb") as handle :
         data = handle.read()
     tweets_by_countries = pickle.loads(data)
 
