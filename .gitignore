@@ -1,0 +1,5 @@
+tweets_by_country.pkl
+__pycache__/
+sentiment_map.png
+sentiment_map_resized.png
+.DS_Store
