@@ -1,4 +1,3 @@
-# Imports
 import numpy as np
 from scipy.special import softmax
 from tqdm import tqdm
@@ -39,7 +38,7 @@ def sentiment_analysis (tweets_by_countries):
 
                     score = softmax(output[0][0].detach().numpy())
 
-                    scores_country.append (score)
+                    scores_country.append(score)
                 except :
                     pass
             if country == 'UK' :

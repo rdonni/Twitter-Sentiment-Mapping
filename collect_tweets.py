@@ -82,7 +82,6 @@ def generate_translated_keyword(keyword: str,
             new_keyword = ''
             for i in range(len(spoken_langages)):
                 new_keyword += translate_keyword_from_en_to_langage(keyword, spoken_langages[i])   
-                print(spoken_langages[i], translate_keyword_from_en_to_langage(keyword, spoken_langages[i])) 
                 if i != len(spoken_langages)-1:
                     new_keyword += ' OR '
             return new_keyword
@@ -96,16 +95,10 @@ def translate_and_save_tweets(tweets,
     for tweet in tqdm(tweets) : 
 
         tweet_text = tweet.full_text
-        print(tweet_text)
-        print()
+
         for langage in eval(LANGUAGES[country]):
-            #detected_langage = 
-            #if detect(tweet_text) == langage:
             try :
-                print(langage)
-                print()
                 tweet_text = translate_tweet_from_langage_to_en(tweet_text, langage) 
-                print(tweet_text)
                 data_country.append([country, tweet.created_at, tweet.user.screen_name, str(tweet_text)])
                 continue
             except :
