@@ -1,17 +1,11 @@
 # Imports
-import pandas as pd
-import geopandas as gpd
 import sys
-import pickle 
-import pandas as pd
-import pandas as pd
+
+import geopandas as gpd
 import numpy as np
-import matplotlib.pyplot as plt
-from shapely.geometry import Polygon, MultiPolygon
-from shapely.ops import cascaded_union
-import shapely
-import cv2
+import pandas as pd
 import plotly.express as px
+from shapely.geometry import MultiPolygon
 
 sys.path.append('/Users/rayanedonni/Documents/Projets_persos/News_by_ai')
 #from sentiment_analysis.tools import COUNTRIES

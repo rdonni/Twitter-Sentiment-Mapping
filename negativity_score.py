@@ -1,6 +1,7 @@
 # Imports 
 import numpy as np
-from tqdm import tqdm 
+from tqdm import tqdm
+
 
 def score(sentiment_score_by_countries):
     

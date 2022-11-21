@@ -1,8 +1,8 @@
 # Imports
-from transformers import AutoTokenizer, AutoModelForSequenceClassification
+import numpy as np
 from scipy.special import softmax
-import numpy as np 
 from tqdm import tqdm
+from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
 # Load the model and tokenizer 
 roberta = "cardiffnlp/twitter-roberta-base-sentiment"  #finiteautomata/bertweet-base-sentiment-analysis

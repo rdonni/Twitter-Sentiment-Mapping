@@ -1,29 +1,56 @@
 # Imports
-import configparser
 import pickle
 from time import sleep
 
-import langdetect
 import tweepy
 from langdetect import detect
 from textblob import TextBlob
 from tqdm import tqdm
 
-from tools import GEOCODES, LANGUAGES
+from tools import LANGUAGES
 
-# read config and authentification
-config = configparser.ConfigParser()
-config.read('/Users/rayanedonni/Documents/Projets_persos/News_by_ai/config.ini')
 
-api_key = config['twitter']['api_key']
-api_key_secret = config['twitter']['api_key_secret']
-access_token = config['twitter']['access_token']
-access_token_secret = config['twitter']['access_token_secret']
+# Collect tweets
+def collect_tweets(api,
+                   geocodes,
+                   tweet_file_path,
+                   keyword = '*',
+                   nb_tweets_per_country = 5,
+                   clear = False, 
+                   ) : 
+        
+    # Handle the tweet collected previously
+    # If clear = True, it clears the file tweets_by_countries.py. The variable tweets_by_countries is set to {}
+    # If clear = False, it loads the previously collected tweets in the variable tweets_by_countries
 
-auth = tweepy.OAuthHandler(api_key, api_key_secret)
-auth.set_access_token(access_token, access_token_secret)
-api = tweepy.API(auth)
-
+    # Load tweet files if necessary
+    tweets_by_countries = load_tweet_files(clear, tweet_file_path)
+    
+    # Collect new tweets
+    for country in tqdm(geocodes.keys()): 
+        print (country)
+        
+        # Translate the keyword that (given in english) into each country's language
+        new_keyword = generate_translated_keyword(keyword, country)
+        
+        tweets = tweepy.Cursor(api.search_tweets,
+                               q = new_keyword,
+                               geocode = geocodes[country],
+                               tweet_mode = "extended",
+                               count = 100
+                               ).items(nb_tweets_per_country)
+                
+        #Collect tweets
+        data_country = translate_and_save_tweets(tweets,
+                                                 country)
+        
+        update_and_save_tweet_file(tweets_by_countries, 
+                                   country,
+                                   data_country,
+                                   tweet_file_path)
+                                        
+    print ("----------------------- tweet collected -----------------------")
+    return tweets_by_countries
 
 def translate_keyword_from_en_to_langage(string,
                                  langage):
@@ -131,47 +158,4 @@ def update_and_save_tweet_file(tweets_by_countries,
     tweet_file.close()
     
 
-# Collect tweets
-def collect_tweets(api,
-                   geocodes,
-                   keyword = '*',
-                   nb_tweets_per_country = 5,
-                   clear = False, 
-                   tweet_file_path= "/Users/rayanedonni/Documents/Projets_persos/News_by_ai/sentiment_analysis/tweets_by_countries.pkl"
-                   ) : 
-        
-    # Handle the tweet collected previously
-    # If clear = True, it clears the file tweets_by_countries.py. The variable tweets_by_countries is set to {}
-    # If clear = False, it loads the previously collected tweets in the variable tweets_by_countries
 
-    # Load tweet files if necessary
-    tweets_by_countries = load_tweet_files(clear, tweet_file_path)
-    
-    # Collect new tweets
-    for country in tqdm(geocodes.keys()): 
-        print (country)
-        
-        # Translate the keyword that (given in english) into each country's language
-        new_keyword = generate_translated_keyword(keyword, country)
-        
-        tweets = tweepy.Cursor(api.search_tweets,
-                               q = new_keyword,
-                               geocode = geocodes[country],
-                               tweet_mode = "extended",
-                               count = 100
-                               ).items(nb_tweets_per_country)
-                
-        #Collect tweets
-        data_country = translate_and_save_tweets(tweets,
-                                                 country)
-        
-        update_and_save_tweet_file(tweets_by_countries, 
-                                   country,
-                                   data_country,
-                                   tweet_file_path)
-                                        
-    print ("----------------------- tweet collected -----------------------")
-    return tweets_by_countries
-
-
-collect_tweets(api, GEOCODES, keyword = '*', nb_tweets_per_country = 3, clear = True)

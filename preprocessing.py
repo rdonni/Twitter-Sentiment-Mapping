@@ -1,11 +1,10 @@
 # Imports 
-import pytz 
 import datetime
+from datetime import date
+
+import pytz
 from tqdm import tqdm
 
-
-# Get the Date
-from datetime import date
 today = date.today()
 today = pytz.UTC.localize(datetime.datetime(today.year, today.month, today.day, 0, 0, 0))
 

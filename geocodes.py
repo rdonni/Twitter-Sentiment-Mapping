@@ -1,10 +1,13 @@
 #Imports
-import requests
-import numpy as np
-from geopy import distance
 from time import sleep
-from tools import COUNTRIES
+
+import numpy as np
+import requests
+from geopy import distance
 from tqdm import tqdm
+
+from tools import COUNTRIES
+
 
 # Get the geocode of each country : geocode:latitude,longitude,radius --> example : geocode:40.712776,-74.005974,10km
 # We use nominatim APIs which is the geocoding software that powers Open Street Map
