@@ -10,13 +10,12 @@ from Vizualisation.vizualisation import generate_map
 
 
 @click.command()
-@click.option('--config-path', default='config.ini')
+@click.option('--config-path', default='/Users/rayanedonni/Documents/Projets_persos/News_by_ai/config.ini', required=True)
 @click.option('--tweets-path', default='/Users/rayanedonni/Documents/Projets_persos/News_by_ai/sentiment_analysis/tweets_by_countries.pkl', required=True)
 @click.option('--keyword', default='*')
-@click.option('nb-tweets-to-collect-by-country', default=3)
-@click.option('clear', default=False)
+@click.option('--nb-tweets-to-collect-by-country', default=3)
+@click.option('--clear', default=False)
 @click.option('--map-output-path', default='Vizualisation/sentiment_map.jpg')
-@click.option()
 def main(
     config_path='/Users/rayanedonni/Documents/Projets_persos/News_by_ai/config.ini',
     tweets_path="/Users/rayanedonni/Documents/Projets_persos/News_by_ai/sentiment_analysis/tweets_by_countries.pkl",
