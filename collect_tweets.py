@@ -174,4 +174,4 @@ def collect_tweets(api,
     return tweets_by_countries
 
 
-collect_tweets(api, GEOCODES, keyword = '*', nb_tweets_per_country = 5, clear = True)
+collect_tweets(api, GEOCODES, keyword = '*', nb_tweets_per_country = 3, clear = True)

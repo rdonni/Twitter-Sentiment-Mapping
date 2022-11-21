@@ -9,98 +9,89 @@ import numpy as np
 import matplotlib.pyplot as plt
 from shapely.geometry import Polygon, MultiPolygon
 from shapely.ops import cascaded_union
+import shapely
 import cv2
+import plotly.express as px
+
 sys.path.append('/Users/rayanedonni/Documents/Projets_persos/News_by_ai')
 #from sentiment_analysis.tools import COUNTRIES
 
 sys.path.remove('/Users/rayanedonni/Documents/Projets_persos/News_by_ai')
+import json
 
-def plot(negativity_score_by_countries):
+
+def generate_map(
+    negativity_score_by_countries, 
+    output_path,
+    shapefile_path='/Users/rayanedonni/Downloads/ne_110m_admin_0_countries/ne_110m_admin_0_countries.shp',
+    ):
     
-    shapefile = '/Users/rayanedonni/Downloads/ne_110m_admin_0_countries/ne_110m_admin_0_countries.shp'
-    #Read shapefile using Geopandas
-    gdf = gpd.read_file(shapefile)[['ADMIN', 'ADM0_A3', 'geometry']]
-    #Rename columns.
-    gdf.columns = ['country', 'country_code', 'geometry']
-
-    # Transform country shape to remove overseas territories
-    # France
-    array = np.array(gdf[gdf.country == 'France']['geometry'])
-    gdf.loc[43,'geometry'] = array[0][1]
-    # Russia
-    shape_to_change = gdf.loc[18,'geometry'][-2]
-    shape_to_change_2 = gdf.loc[18,'geometry'][-3]
-    x, y = shape_to_change.exterior.coords.xy
-    x2, y2 = shape_to_change_2.exterior.coords.xy
-    for i in range (len(x)):
-        x[i] = x[i] + 360
-    for i in range (len(x2)):
-        x2[i] = x2[i] + 360
-    new_multipolygon = []
-    for i in range (len(gdf.loc[18,'geometry'])) :
-        if i == len(gdf.loc[18,'geometry']) - 3:
-            pass
-        
-        elif i == len(gdf.loc[18,'geometry']) - 2:
-            pass
-            
-        elif i == 1 :
-            new_multipolygon.append(cascaded_union([gdf.loc[18,'geometry'][i], Polygon([[x2[i], y2[i]] for i in range(len(x2))])]))
-
-        elif i == 0 :
-            new_multipolygon.append(cascaded_union([gdf.loc[18,'geometry'][i], Polygon([[x[i], y[i]] for i in range(len(x))])]))
-        
-        else : 
-            new_multipolygon.append(gdf.loc[18,'geometry'][i])          
-
-    new_multipolygon = MultiPolygon(new_multipolygon)
-    gdf['geometry'][18] = new_multipolygon
-
-    # Remove useless rows of gdf        
-    for row in range(len(gdf)):
-        if gdf.loc[row, 'country'] not in negativity_score_by_countries.keys():
-            gdf.drop(row, axis = 0, inplace = True)
+    gdf = gpd.read_file(shapefile_path)[['ADMIN', 'ADM0_A3', 'geometry']]
+    gdf.columns = ['country', 'country_code', 'geometry']     
+    gdf = customize_shapefile(gdf)
+    
+    # Remove unused countries
+    gdf.drop([row for row in range(len(gdf)) if gdf.loc[row, 'country'] not in negativity_score_by_countries.keys()],
+             axis = 0,
+             inplace = True)
     gdf.index = [i for i in range(len(gdf))]
-
+         
     # Merge the two dataframes
-    neg_scores = []
-    for row in range (len(gdf)) :
-        country = gdf.loc[row,'country'] 
-        neg_scores.append(negativity_score_by_countries[country])
-    merged = gdf.copy()
-    merged["score"] = pd.DataFrame(data = neg_scores)
+    neg_scores = [negativity_score_by_countries[gdf.loc[row,'country']] for row in gdf.index]
+
+    gdf["score"] = pd.DataFrame(data = neg_scores)
+    gdf = gdf.set_index("country")
+
+    fig = px.choropleth(
+        gdf,
+        geojson=gdf.geometry,
+        locations=gdf.index,
+        #marker_line_color='white',
+        projection='mercator',
+        color_continuous_scale='rdylgn',
+        color="score",
+        width=3200, height=1600
+        )
+    
+    fig.update_geos(fitbounds="locations", visible=False)
+        
+    fig.update_layout(
+        title_text='Twitter sentiment map <br>18-11-2022',
+        coloraxis_showscale=False,
+        title={
+            "yref": "paper",
+            "y" : 1,
+            "yanchor" : "bottom"   
+            }
+        )
+    
+    fig.write_image(output_path)
+    fig.show()
 
 
-    # create figure and axes for Matplotlib
-    fig, ax = plt.subplots(1) #figsize = (5,10)    
+def reduce_by_length(polygon_shape, nb_polygon_to_keep):
+    polygons_in_shape = list(polygon_shape)
     
-    #ax.annotate("Created from X tweets from each country collected between X and X",
-    #            xy=(0.085, 0.15),  
-     #           xycoords="figure fraction", 
-     #           horizontalalignment="left", 
-     #           verticalalignment="top", 
-     #           fontstyle = "italic",
-     #           fontsize=4, 
-     #           color="#555555")
-    
-    
-    merged.plot(column='score',
-                ax=ax,
-                cmap = 'RdYlGn',
-                figsize = (4,8),  
-                edgecolor = 'olive',
-                linewidth = 0.3,
-                missing_kwds={
-                "color": "lightgrey",
-                "label": "Missing values"}
-                        )
-    ax.set_axis_off()
-    
-    plt.savefig('/Users/rayanedonni/Documents/Projets_persos/News_by_ai/sentiment_analysis/sentiment_map.png', bbox_inches='tight', dpi=1800)
-    plt.show()
-    
-    
-    
+    if len(polygons_in_shape) <= nb_polygon_to_keep:
+        return polygon_shape
+    else :
+        polygons_length = [polygon.length for polygon in polygons_in_shape]
+        polygons_indices_to_keep = arg_of_n_max(polygons_length, nb_polygon_to_keep)
+        print("polygons_indices_to_keep =", polygons_indices_to_keep)
+        
+        if nb_polygon_to_keep==1:
+            return polygons_in_shape[polygons_indices_to_keep[0]]
+        else :
+            reduced_polygon = MultiPolygon([polygons_in_shape[i] for i in polygons_indices_to_keep])
+            return reduced_polygon
+        
+     
+def arg_of_n_max(lst, n):
+    ind = np.argpartition(lst, -n)[-n:]
+    return ind
 
-
-
+def customize_shapefile(gdf):
+    gdf.at[43, 'geometry']=reduce_by_length(gdf.at[43, 'geometry'], 1)
+    gdf.at[18, 'geometry']=reduce_by_length(gdf.at[18, 'geometry'], 2)
+    
+    return gdf
