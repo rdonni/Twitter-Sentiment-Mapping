@@ -53,10 +53,7 @@ def main(
     # Plot the results on a map
     generate_map(negativity_score_by_countries, map_output_path)
 
-    if update_status == True:
-        
-        tweet_text = ""
-        
+    if update_status == True:        
         upload_tweet(api, default_tweet_text(keyword), map_output_path)
 
 if __name__ == "__main__":
