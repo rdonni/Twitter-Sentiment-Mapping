@@ -12,42 +12,38 @@ labels = ['Negative', 'Neutral', 'Positive']
 
 # Sentiment Analysis with Roberta
 
-def sentiment_analysis (tweets_by_countries):
+def sentiment_analysis(tweets_by_countries: dict[str, str]) -> dict[str, float]:
+    
+    """
+    Take as input a dictionnary dict[country: str, tweets: list[str]] 
+    Return sentiment scores of each country in a dict[country: str, score: float]
+    """
     
     # Get the maximum number of tweets among all countries
-    nb_tweets = []
-    for country in tweets_by_countries.keys():
-        nb_tweets.append(len(tweets_by_countries[country]))
+    nb_tweets = [len(tweets_by_countries[country]) for country in tweets_by_countries.keys()]
     max_nb_tweets = max(nb_tweets)
     
     sentiment_score_by_countries = {}
-    
     for country in tweets_by_countries.keys() : 
-        
+        # If a country has too few tweets, its score is considered too little negative.
+        # We then arbitrarily set its score to None
         if len(tweets_by_countries[country]) < 0.3*max_nb_tweets:
-
-            sentiment_score_by_countries[country] = np.nan
-        
+            sentiment_score_by_countries[country] = None
         else : 
             scores_country = []
-
             for tweet_processed in tqdm(tweets_by_countries[country]) : 
                 try :
-                    encoded_tweet = tokenizer(tweet_processed, return_tensors = 'pt')
-                    output = model(encoded_tweet['input_ids'], encoded_tweet['attention_mask'])
-
+                    tweet_tokens = tokenizer(tweet_processed, return_tensors = 'pt')
+                    output = model(tweet_tokens['input_ids'], tweet_tokens['attention_mask'])
                     score = softmax(output[0][0].detach().numpy())
-
                     scores_country.append(score)
                 except :
                     pass
-            if country == 'UK' :
-                sentiment_score_by_countries['United Kingdom'] = scores_country # UK is not quoted in the shape file for vizualisation but United Kingdom is
 
-            else :
-                sentiment_score_by_countries[country] = scores_country
+            sentiment_score_by_countries[country] = scores_country
+            # UK is not quoted in the shape file for vizualisation but United Kingdom is
+            sentiment_score_by_countries['United Kingdom'] = sentiment_score_by_countries.pop('UK')
         
-
     print ("----------------------- sentimental analysis realised -----------------------")
     return sentiment_score_by_countries
 
