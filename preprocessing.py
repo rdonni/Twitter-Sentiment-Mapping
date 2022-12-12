@@ -10,30 +10,25 @@ today = pytz.UTC.localize(datetime.datetime(today.year, today.month, today.day, 
 
 #Tweet preprocessing : to be able to use the model each link is replaced by the expression "http" and each mention is replaced by @user
 def preprocessing(tweets_by_countries) : 
-
     for country in tqdm(tweets_by_countries.keys()) : 
-        
         tweets_country = []
         print(country)
-        for i in range (len (tweets_by_countries[country])) : 
-            
-            tweet_words = []
-            tweet = tweets_by_countries [country][i][3]
-            tweet = tweet.replace("\n", " ")
-            
-            for word in tweet.split(' ') :
-                
-                if word.startswith('@') and len(word) > 1:
-                    word = "@user"
-                elif word.startswith('http') :
-                    word = "http"
-                else : 
-                    pass
-                tweet_words.append(word)
-                
+        for i in range(len(tweets_by_countries[country])) : 
+            tweet = tweets_by_countries[country][i][3].replace("\n", " ")            
+            tweet_words = [preprocess_word(word) for word in tweet.split(' ')]                
             tweets_country.append(" ".join(tweet_words))
             
         tweets_by_countries[country] = tweets_country 
         
     print ("----------------------- tweet preprocessed -----------------------")
     return tweets_by_countries
+
+
+
+def preprocess_word(token: str):
+    if token.startswith('@') and len(token) > 1:
+        token = "@user"
+    elif token.startswith('http') :
+        token = "http"
+        
+    return token
