@@ -6,7 +6,7 @@ from langdetect import detect
 from textblob import TextBlob
 from tqdm import tqdm
 
-from tools import LANGUAGES
+from tools.tools import LANGUAGES
 
 
 # Collect tweets

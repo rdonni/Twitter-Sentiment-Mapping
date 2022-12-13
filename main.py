@@ -1,13 +1,13 @@
 import click
 
-from api_access import get_api_access
+from api_management.api_access import get_api_access
 from collect_tweets import collect_tweets
-from geocodes import geocode
+from tools.geocodes import geocode
 from negativity_score import score
 from preprocessing import preprocessing
 from sentiments_analysis import sentiment_analysis
-from tools import COUNTRIES, GEOCODES
-from Vizualisation.vizualisation import generate_map
+from tools.tools import COUNTRIES, GEOCODES
+from vizualisation.vizualisation import generate_map
 from update_status import default_tweet_text, upload_tweet
 
 
@@ -22,12 +22,12 @@ from update_status import default_tweet_text, upload_tweet
 #@click.option('--update-status', default=False)
 def main(
     config_path: str='/Users/rayanedonni/Documents/Projets_persos/News_by_ai/config.ini',
-    tweets_path: str="tweets_by_countries.pkl",
+    tweets_path: str="/Users/rayanedonni/Documents/Projets_persos/News_by_ai/sentiment_analysis/tweets_by_countries.pkl",
     keyword: str='*',
-    compute_geocodes: bool= True,
-    nb_tweets_to_collect_by_country: int=10,
-    clear: bool=False,
-    map_output_path: str='Vizualisation/sentiment_map.png', 
+    compute_geocodes: bool= False,
+    nb_tweets_to_collect_by_country: int=5,
+    clear: bool=True,
+    map_output_path: str='vizualisation/sentiment_map.png', 
     update_status: bool=False):
     
     api=get_api_access(config_path)
@@ -50,12 +50,11 @@ def main(
     for key,value in negativity_score_by_countries.items() :
         print (key, " :", value)
 
-    # Plot the results on a map
     generate_map(negativity_score_by_countries, map_output_path)
 
     if update_status == True:        
         upload_tweet(api, default_tweet_text(keyword), map_output_path)
 
+
 if __name__ == "__main__":
     main()
-    

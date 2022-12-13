@@ -77,6 +77,7 @@ LANGUAGES =  {"Spain" : '["es", "en"]',
              }
 
 # GEOCODES is calculated by calling GEOCODES = geocodes(COUNTRIES) where geocodes is defined in geocodes.py
+# Here are also the hard-coded results to avoid recalculating them each time if you wish.
 GEOCODES = {'Spain' :  '39.3260685,-4.8379791,518.3752444827079km',
             'Russia' :  '64.6863136,97.7453061,1938.6528020766675km',
             'UK':  '54.7023545,-3.2765753,346.0057994074452km',
