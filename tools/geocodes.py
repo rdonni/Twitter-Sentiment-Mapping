@@ -1,5 +1,6 @@
 # Imports
 from time import sleep
+from typing import Dict, List
 
 import numpy as np
 import requests
@@ -7,7 +8,7 @@ from geopy import distance
 from tqdm import tqdm
 
 
-def get_boundingbox_country(country, output_as='boundingbox') -> list[float, float]:
+def get_boundingbox_country(country, output_as='boundingbox') -> List[float]:
     """
     Get the bounding box of a country in EPSG4326 given a country name
     Value are given by nominatim APIs which is the geocoding software that powers Open Street Map
@@ -65,7 +66,7 @@ def minimal_radius(country: str) -> float:
     return radius
 
 
-def geocode(countries: list[str]) -> dict[str, str]:
+def geocode(countries: List[str]) -> Dict[str, str]:
     """
     Generate a dictionnary dict[country: str, geocode: str] from a list of countries
 

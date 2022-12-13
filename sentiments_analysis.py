@@ -1,3 +1,4 @@
+from typing import Dict
 import numpy as np
 from scipy.special import softmax
 from tqdm import tqdm
@@ -12,7 +13,7 @@ labels = ['Negative', 'Neutral', 'Positive']
 
 # Sentiment Analysis with Roberta
 
-def sentiment_analysis(tweets_by_countries: dict[str, str]) -> dict[str, float]:
+def sentiment_analysis(tweets_by_countries: Dict[str, str]) -> Dict[str, float]:
     
     """
     Take as input a dictionnary dict[country: str, tweets: list[str]] 

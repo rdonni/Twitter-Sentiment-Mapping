@@ -22,13 +22,13 @@ from update_status import default_tweet_text, upload_tweet
 # @click.option('--update-status', default=False)
 def main(
         config_path: str = '/Users/rayanedonni/Documents/Projets_persos/News_by_ai/config.ini',
-        tweets_path: str = "/Users/rayanedonni/Documents/Projets_persos/News_by_ai/sentiment_analysis/tweets_by_countries.pkl",
+        tweets_path: str = 'tweets_by_countries.pkl',
         keyword: str = '*',
         compute_geocodes: bool = False,
         nb_tweets_to_collect_by_country: int = 5,
         clear: bool = True,
         map_output_path: str = 'vizualisation/sentiment_map.png',
-        update_status: bool = False) -> object:
+        update_status: bool = True) -> None:
     api = get_api_access(config_path)
 
     if compute_geocodes:

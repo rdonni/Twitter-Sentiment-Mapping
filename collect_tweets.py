@@ -1,5 +1,6 @@
 # Imports
 import pickle
+from typing import Dict, List, Union, Any
 
 import tweepy
 from langdetect import detect
@@ -11,7 +12,7 @@ from tools.tools import LANGUAGES
 
 # Collect tweets
 def collect_tweets(api,
-                   geocodes: dict[str, str],
+                   geocodes: Dict[str, str],
                    tweet_file_path: str,
                    keyword: str = '*',
                    nb_tweets_per_country: int = 5,
@@ -76,7 +77,7 @@ def generate_translated_keyword(keyword: str, country: str) -> str:
     else:
         spoken_langages = eval(LANGUAGES[country])
 
-        if (len(spoken_langages) == 1):
+        if len(spoken_langages) == 1:
             return keyword
         else:
             new_keyword = ''
@@ -87,7 +88,7 @@ def generate_translated_keyword(keyword: str, country: str) -> str:
             return new_keyword
 
 
-def translate_and_save_tweets(tweets, country: str) -> list[str, str, str, str]:
+def translate_and_save_tweets(tweets, country: str) -> List[List[Union[str, Any]]]:
 
     data_country = []
     for tweet in tqdm(tweets):

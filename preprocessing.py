@@ -1,7 +1,9 @@
+from typing import Dict
+
 from tqdm import tqdm
 
 
-def preprocessing(tweets_by_countries: dict[str, str]) -> dict[str, str]:
+def preprocessing(tweets_by_countries: Dict[str, str]) -> Dict[str, str]:
     """
     Tweet preprocessing : 
     - each link is replaced by the expression "http" 
