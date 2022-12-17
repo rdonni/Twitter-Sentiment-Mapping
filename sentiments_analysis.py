@@ -46,7 +46,7 @@ def sentiment_analysis(tweets_by_countries: Dict[str, str]) -> Dict[str, float]:
             print(country)
             print(scores_country)
             sentiment_score_by_countries[country] = scores_country
-    # UK is not quoted in the shape file for vizualisation but United Kingdom is
+    # UK is not quoted in the shape file for visualisation but United Kingdom is
     sentiment_score_by_countries['United Kingdom'] = sentiment_score_by_countries.pop('UK')
         
     print ("----------------------- sentimental analysis realised -----------------------")

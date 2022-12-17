@@ -8,7 +8,7 @@ from shapely.geometry import MultiPolygon
 def generate_map(
         negativity_score_by_countries,
         output_path,
-        shapefile_path='vizualisation/countries_shapefile/ne_110m_admin_0_countries.shp'):
+        shapefile_path='visualisation/countries_shapefile/ne_110m_admin_0_countries.shp'):
     gdf = gpd.read_file(shapefile_path)[['ADMIN', 'ADM0_A3', 'geometry']]
     gdf.columns = ['country', 'country_code', 'geometry']
     gdf = customize_shapefile(gdf)
@@ -67,23 +67,17 @@ def generate_choropleth_map(gdf):
         gdf,
         geojson=gdf.geometry,
         locations=gdf.index,
-        # marker_line_color='white',
         projection='mercator',
         color_continuous_scale='rdylgn',
         color="score",
-        width=3200, height=1600
+        #width=3200, height=1600
     )
 
     fig.update_geos(fitbounds="locations", visible=False)
 
     fig.update_layout(
-    # title_text='Twitter sentiment map <br>18-11-2022',
-     coloraxis_showscale=False,
-    # title={
-    #    "yref": "paper",
-    #    "y" : 1,
-    #    "yanchor" : "bottom"
-    #    }
-     )
+        margin=dict(l=0, r=0, b=0, t=0),
+        coloraxis_showscale=False,
+    )
 
     return fig

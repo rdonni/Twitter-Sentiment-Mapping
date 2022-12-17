@@ -10,7 +10,6 @@ from tqdm import tqdm
 from tools.tools import LANGUAGES
 
 
-# Collect tweets
 def collect_tweets(api,
                    geocodes: Dict[str, str],
                    tweet_file_path: str,

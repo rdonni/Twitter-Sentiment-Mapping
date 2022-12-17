@@ -7,13 +7,13 @@ from negativity_score import score
 from preprocessing import preprocessing
 from sentiments_analysis import sentiment_analysis
 from tools.tools import COUNTRIES, GEOCODES
-from vizualisation.vizualisation import generate_map
+from visualisation.vizualisation import generate_map
 from update_status import default_tweet_text, upload_tweet
 
 
 # @click.command()
 # @click.option('--config-path', default='/Users/rayanedonni/Documents/Projets_persos/News_by_ai/config.ini', required=True)
-# @click.option('--tweets-path', default='/Users/rayanedonni/Documents/Projets_persos/News_by_ai/sentiment_analysis/tweets_by_countries.pkl', required=True)
+# @click.option('--tweets-path', default='tweets_by_countries.pkl', required=True)
 # @click.option('--keyword', default='*')
 # @click.option('--compute-geocodes, default=True)
 # @click.option('--nb-tweets-to-collect-by-country', default=3)
@@ -25,9 +25,9 @@ def main(
         tweets_path: str = 'tweets_by_countries.pkl',
         keyword: str = '*',
         compute_geocodes: bool = False,
-        nb_tweets_to_collect_by_country: int = 5,
+        nb_tweets_to_collect_by_country: int = 10,
         clear: bool = True,
-        map_output_path: str = 'vizualisation/sentiment_map.png',
+        map_output_path: str = 'visualisation/sentiment_map.png',
         update_status: bool = True) -> None:
     api = get_api_access(config_path)
 
