@@ -12,15 +12,21 @@ from update_status import default_tweet_text, upload_tweet
 
 
 @click.command()
-@click.option('--config-path', default='api_management/config.ini', required=True)
-@click.option('--tweets-path', default='tweets_by_countries.pkl', required=True)
-@click.option('--keyword', default='*')
+@click.option('--config-path', default='api_management/config.ini', required=True, help='Path to the config file '
+                                                                                        'containing twitter api keys')
+@click.option('--tweets-path', default='tweets_by_countries.pkl', required=True, help='Path to the pickle file '
+                                                                                      'containing the tweets of each '
+                                                                                      'country')
+@click.option('--keyword', default='*', help='If the value is different from *, all tweets retrieved will contain '
+                                             'keyword')
 @click.option('--compute-geocodes', default=True)
 @click.option('--nb-tweets-to-collect-by-country', default=3)
 @click.option('--collect-only', default=False)
-@click.option('--clear', default=False)
+@click.option('--clear', default=False, help="If clear is True, the tweet_by_countries file is cleared before "
+                                             "collecting new tweets")
 @click.option('--map-output-path', default='visualisation/sentiment_map.png')
-@click.option('--update-status', default=False)
+@click.option('--update-status', default=False, help='If update-status=True, a publication will be posted with a '
+                                                     'default text and the map created ')
 def main(
         config_path: str = 'api_management/config.ini',
         tweets_path: str = 'tweets_by_countries.pkl',
