@@ -1,5 +1,3 @@
-# Imports
-from time import sleep
 from typing import Dict, List
 
 import numpy as np
@@ -68,20 +66,18 @@ def minimal_radius(country: str) -> float:
 
 def geocode(countries: List[str]) -> Dict[str, str]:
     """
-    Generate a dictionnary dict[country: str, geocode: str] from a list of countries
+    Generate a dictionary dict[country: str, geocode: str] from a list of countries
 
     For some countries not available in nominatim APIs (as Ukraine)
     an approximation of the coordinates obtained by hand is provided
     """
-
-    geocode = {}
+    print('----------------------- Computing geocodes... -----------------------')
+    geocodes = {}
     for country in tqdm(countries):
         if country == "Ukraine":
-            geocode[country] = "48.2289622,27.1482283,200km"
+            geocodes[country] = "48.2289622,27.1482283,200km"
         else:
             country_center = get_boundingbox_country(country, output_as='center')
-            geocode[country] = f'{country_center[0]},{country_center[1]},{minimal_radius(country)}km'
-
-        sleep(0.5)
-    print("----------------------- geocodes generated -----------------------")
-    return geocode
+            geocodes[country] = f'{country_center[0]},{country_center[1]},{minimal_radius(country)}km'
+    print("----------------------- Geocodes generated -----------------------")
+    return geocodes

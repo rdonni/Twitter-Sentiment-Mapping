@@ -2,8 +2,10 @@ from tqdm import tqdm
 
 
 def score(sentiment_score_by_countries):
-    for country in tqdm(sentiment_score_by_countries.keys()):
 
+    print('----------------------- Calculating sentiment scores... -----------------------')
+
+    for country in tqdm(sentiment_score_by_countries.keys()):
         if isinstance(sentiment_score_by_countries[country], list):
 
             negative_count = 0
@@ -28,5 +30,5 @@ def score(sentiment_score_by_countries):
         else:
             sentiment_score_by_countries[country] = None
 
-    print("----------------------- scores calculated -----------------------")
+    print("----------------------- Sentiment scores calculated -----------------------")
     return sentiment_score_by_countries

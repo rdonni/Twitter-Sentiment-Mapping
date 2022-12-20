@@ -9,6 +9,7 @@ def preprocessing(tweets_by_countries: Dict[str, str]) -> Dict[str, str]:
     - each link is replaced by the expression "http" 
     - each mention is replaced by @user
     """
+    print("----------------------- Preprocessing tweets... -----------------------")
 
     for country in (pbar := tqdm(tweets_by_countries.keys())):
         pbar.set_description(f"Processing {country}")
@@ -20,7 +21,7 @@ def preprocessing(tweets_by_countries: Dict[str, str]) -> Dict[str, str]:
 
         tweets_by_countries[country] = tweets_country
 
-    print("----------------------- tweet preprocessed -----------------------")
+    print("----------------------- Tweets preprocessed -----------------------")
     return tweets_by_countries
 
 
