@@ -41,7 +41,7 @@ def collect_tweets(api,
                                q=new_keyword,
                                geocode=geocodes[country],
                                tweet_mode="extended",
-                               count=100
+                               count=200
                                ).items(nb_tweets_per_country)
 
         data_country = translate_and_save_tweets(tweets,
@@ -54,7 +54,6 @@ def collect_tweets(api,
 
     print("----------------------- Tweets collected -----------------------")
     return tweets_by_countries
-
 
 
 def translate_keyword_from_en_to_language(string: str, language: str) -> str:
@@ -82,7 +81,10 @@ def generate_translated_keyword(keyword: str, country: str) -> str:
         else:
             new_keyword = ''
             for i in range(len(spoken_languages)):
-                new_keyword += translate_keyword_from_en_to_language(keyword, spoken_languages[i])
+                try :
+                    new_keyword += translate_keyword_from_en_to_language(keyword, spoken_languages[i])
+                except:
+                    new_keyword += keyword
                 if i != len(spoken_languages) - 1:
                     new_keyword += ' OR '
             return new_keyword
@@ -96,7 +98,7 @@ def translate_and_save_tweets(tweets, country: str) -> List[List[Union[str, Any]
             try:
                 tweet_text = translate_tweet_from_language_to_en(tweet_text, language)
                 data_country.append([country, tweet.created_at, tweet.user.screen_name, str(tweet_text)])
-                continue
+                break
             except:
                 pass
 

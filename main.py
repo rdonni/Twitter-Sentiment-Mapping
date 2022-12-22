@@ -7,7 +7,7 @@ from negativity_score import score
 from preprocessing import preprocessing
 from sentiments_analysis import sentiment_analysis
 from tools.tools import COUNTRIES, GEOCODES
-from visualisation.vizualisation import generate_map
+from visualisation.visualisation import generate_map
 from update_status import default_tweet_text, upload_tweet
 
 

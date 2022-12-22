@@ -70,7 +70,7 @@ def generate_choropleth_map(gdf):
         projection='mercator',
         color_continuous_scale='rdylgn',
         color="score",
-        #width=3200, height=1600
+        width=3200, height=1600
     )
 
     fig.update_geos(fitbounds="locations", visible=False)

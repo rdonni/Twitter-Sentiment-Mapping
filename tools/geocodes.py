@@ -76,6 +76,12 @@ def geocode(countries: List[str]) -> Dict[str, str]:
     for country in tqdm(countries):
         if country == "Ukraine":
             geocodes[country] = "48.2289622,27.1482283,200km"
+        elif country == "Iceland":
+            geocodes[country] = '64.128288,-21.827774,120km'
+        elif country == 'Kosovo':
+            geocodes[country] = '42.667542,21.166191,50km'
+        elif country == 'Montenegro':
+            geocodes[country] = '42.393097,18.911596,50km'
         else:
             country_center = get_boundingbox_country(country, output_as='center')
             geocodes[country] = f'{country_center[0]},{country_center[1]},{minimal_radius(country)}km'
