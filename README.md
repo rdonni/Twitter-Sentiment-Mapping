@@ -14,6 +14,7 @@ This project is composed of several steps:
 Here are some examples of cards that can be obtained with this code.
 
 Here is a map obtained on December 20, 2022, just after the World Cup in Qatar by **filtering tweets containing the word Qatar**. This map was built by collecting 1000 tweets for each country.
+
 <img width="994" alt="Capture d’écran 2022-12-22 à 14 55 50" src="https://user-images.githubusercontent.com/106410831/209149418-0d070d16-716c-4bcd-b786-c4c2541e04d1.png">
 
 ## Instalation
