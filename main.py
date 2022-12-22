@@ -19,8 +19,8 @@ from update_status import default_tweet_text, upload_tweet
                                                                                       'country')
 @click.option('--keyword', default='*', help='If the value is different from *, all tweets retrieved will contain '
                                              'keyword')
-@click.option('--compute-geocodes', default=True)
-@click.option('--nb-tweets-to-collect-by-country', default=3)
+@click.option('--compute-geocodes', default=False)
+@click.option('--nb-tweets-to-collect-by-country', default=50)
 @click.option('--collect-only', default=False)
 @click.option('--clear', default=False, help="If clear is True, the tweet_by_countries file is cleared before "
                                              "collecting new tweets")
@@ -28,15 +28,15 @@ from update_status import default_tweet_text, upload_tweet
 @click.option('--update-status', default=False, help='If update-status=True, a publication will be posted with a '
                                                      'default text and the map created ')
 def main(
-        config_path: str = 'api_management/config.ini',
-        tweets_path: str = 'tweets_by_countries.pkl',
-        keyword: str = '*',
-        compute_geocodes: bool = False,
-        nb_tweets_to_collect_by_country: int = 10,
-        collect_only: bool = False,
-        clear: bool = False,
-        map_output_path: str = 'visualisation/sentiment_map.png',
-        update_status: bool = True
+        config_path: str,
+        tweets_path: str,
+        keyword: str,
+        compute_geocodes: bool,
+        nb_tweets_to_collect_by_country,
+        collect_only: bool,
+        clear: bool,
+        map_output_path: str,
+        update_status: bool
 ) -> None:
 
     api = get_api_access(config_path)
