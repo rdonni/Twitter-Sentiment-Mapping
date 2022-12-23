@@ -1,4 +1,4 @@
-tweets_by_country.pkl
+twitter_sentiment_mapping/tweets_by_countries.pkl
 __pycache__/
 sentiment_map.png
 sentiment_map_resized.png

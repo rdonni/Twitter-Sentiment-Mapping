@@ -1,14 +1,14 @@
 import click
 
-from api_management.api_access import get_api_access
-from collect_tweets import collect_tweets
-from tools.geocodes import geocode
-from negativity_score import score
-from preprocessing import preprocessing
-from sentiments_analysis import sentiment_analysis
-from tools.tools import COUNTRIES, GEOCODES
-from visualisation.visualisation import generate_map
-from update_status import default_tweet_text, upload_tweet
+from twitter_sentiment_mapping.api_management.api_access import get_api_access
+from twitter_sentiment_mapping.collect_tweets import collect_tweets
+from twitter_sentiment_mapping.tools.geocodes import geocode
+from twitter_sentiment_mapping.negativity_score import score
+from twitter_sentiment_mapping.preprocessing import preprocessing
+from twitter_sentiment_mapping.sentiments_analysis import sentiment_analysis
+from twitter_sentiment_mapping.tools.tools import COUNTRIES, GEOCODES
+from twitter_sentiment_mapping.visualisation.visualisation import generate_map
+from twitter_sentiment_mapping.update_status import default_tweet_text, upload_tweet
 
 
 @click.command()
