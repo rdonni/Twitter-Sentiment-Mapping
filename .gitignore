@@ -1,4 +1,4 @@
-twitter_sentiment_mapping/tweets_by_countries.pkl
+twitter_sentiment_mapping/tweets_by_countries.json
 __pycache__/
 twitter_sentiment_mapping/visualisation/sentiment_map.png
 .DS_Store

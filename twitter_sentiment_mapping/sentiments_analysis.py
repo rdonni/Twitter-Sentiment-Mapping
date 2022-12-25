@@ -1,23 +1,20 @@
 from typing import Dict
+
 from scipy.special import softmax
 from tqdm import tqdm
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
-# Load the model and tokenizer 
-roberta = "cardiffnlp/twitter-roberta-base-sentiment"  # finiteautomata/bertweet-base-sentiment-analysis
-model = AutoModelForSequenceClassification.from_pretrained(roberta)
-tokenizer = AutoTokenizer.from_pretrained(roberta)
-
-labels = ['Negative', 'Neutral', 'Positive']
-
-
-# Sentiment Analysis with Roberta
 
 def sentiment_analysis(tweets_by_countries: Dict[str, str]) -> Dict[str, float]:
     """
     Take as input a dictionnary dict[country: str, tweets: list[str]] 
     Return sentiment scores of each country in a dict[country: str, score: float]
     """
+
+    # Load the model and tokenizer
+    roberta = "cardiffnlp/twitter-roberta-base-sentiment"  # finiteautomata/bertweet-base-sentiment-analysis
+    model = AutoModelForSequenceClassification.from_pretrained(roberta)
+    tokenizer = AutoTokenizer.from_pretrained(roberta)
 
     print("----------------------- Computing sentiment analysis... -----------------------")
     sentiment_score_by_countries = {}

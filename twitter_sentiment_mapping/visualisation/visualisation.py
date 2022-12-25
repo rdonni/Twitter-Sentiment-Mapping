@@ -3,12 +3,15 @@ import numpy as np
 import pandas as pd
 import plotly.express as px
 from shapely.geometry import MultiPolygon
+import os
 
 
 def generate_map(
         negativity_score_by_countries,
         output_path,
-        shapefile_path='visualisation/countries_shapefile/ne_110m_admin_0_countries.shp'):
+        shapefile_path=os.path.join(os.path.dirname(__file__), 'countries_shapefile', 'ne_110m_admin_0_countries.shp')
+) -> None:
+
     gdf = gpd.read_file(shapefile_path)[['ADMIN', 'ADM0_A3', 'geometry']]
     gdf.columns = ['country', 'country_code', 'geometry']
     gdf = customize_shapefile(gdf)

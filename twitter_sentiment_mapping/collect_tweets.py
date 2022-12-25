@@ -1,3 +1,4 @@
+import json
 import pickle
 from typing import Dict, List, Union, Any
 
@@ -6,15 +7,16 @@ from langdetect import detect
 from textblob import TextBlob
 from tqdm import tqdm
 
-from tools.tools import LANGUAGES
+from twitter_sentiment_mapping.tools.tools import LANGUAGES
 
 
 def collect_tweets(api,
                    geocodes: Dict[str, str],
                    tweet_file_path: str,
-                   keyword: str = '*',
-                   nb_tweets_per_country: int = 5,
-                   clear: bool = True,
+                   keyword: str,
+                   traduce_keyword: bool,
+                   nb_tweets_per_country: int,
+                   clear: bool,
                    ):
     """
     Return and save a dictionary containing tweets by country
@@ -35,13 +37,13 @@ def collect_tweets(api,
         pbar.set_description(f"Processing {country}")
 
         # Translate the keyword that (given in english) into each country's language
-        new_keyword = generate_translated_keyword(keyword, country)
+        new_keyword = generate_translated_keyword(keyword, country, traduce_keyword)
 
         tweets = tweepy.Cursor(api.search_tweets,
                                q=new_keyword,
                                geocode=geocodes[country],
                                tweet_mode="extended",
-                               count=200
+                               count=1000
                                ).items(nb_tweets_per_country)
 
         data_country = translate_and_save_tweets(tweets,
@@ -70,18 +72,18 @@ def translate_tweet_from_language_to_en(tweet_text: str, language: str) -> str:
         return str(TextBlob(tweet_text).translate(from_lang=language, to='en'))
 
 
-def generate_translated_keyword(keyword: str, country: str) -> str:
-    if keyword == '*':
+def generate_translated_keyword(keyword: str, country: str, traduce_keyword: bool) -> str:
+    if (not traduce_keyword) or (keyword == '*'):
         return keyword
     else:
-        spoken_languages = eval(LANGUAGES[country])
+        spoken_languages = LANGUAGES[country]
 
         if len(spoken_languages) == 1:
             return keyword
         else:
             new_keyword = ''
             for i in range(len(spoken_languages)):
-                try :
+                try:
                     new_keyword += translate_keyword_from_en_to_language(keyword, spoken_languages[i])
                 except:
                     new_keyword += keyword
@@ -94,10 +96,10 @@ def translate_and_save_tweets(tweets, country: str) -> List[List[Union[str, Any]
     data_country = []
     for tweet in tqdm(tweets):
         tweet_text = tweet.full_text
-        for language in eval(LANGUAGES[country]):
+        for language in LANGUAGES[country]:
             try:
                 tweet_text = translate_tweet_from_language_to_en(tweet_text, language)
-                data_country.append([country, tweet.created_at, tweet.user.screen_name, str(tweet_text)])
+                data_country.append((country, tweet.created_at, tweet.user.screen_name, str(tweet_text)))
                 break
             except:
                 pass
@@ -109,21 +111,16 @@ def translate_and_save_tweets(tweets, country: str) -> List[List[Union[str, Any]
 def load_tweet_files(clear: bool, tweet_file_path: str):
     if clear:
         tweets_by_countries = {}
-        # We open the file containing the tweets
-        tweet_file = open(tweet_file_path, "wb")
-        tweet_file.truncate(0)  # Clear the file
-        pickle.dump(tweets_by_countries, tweet_file)
-        tweet_file.close()
+        with open(tweet_file_path, "w") as outfile:
+            json.dump(tweets_by_countries, outfile)
     else:
         try:  # Try to load the tweet dictionary if it already exists
-            with open(tweet_file_path, "rb") as handle:
-                data = handle.read()
-            tweets_by_countries = pickle.loads(data)
+            with open(tweet_file_path, "rb") as openfile:
+                tweets_by_countries = json.load(openfile)
         except:  # If it doesn't exist, create an empty dictionary and save it into a specific directory
             tweets_by_countries = {}
-            tweet_file = open(tweet_file_path, "wb")
-            pickle.dump(tweets_by_countries, tweet_file)
-            tweet_file.close()
+            with open(tweet_file_path, "w") as outfile:
+                json.dump(tweets_by_countries, outfile)
 
     return tweets_by_countries
 

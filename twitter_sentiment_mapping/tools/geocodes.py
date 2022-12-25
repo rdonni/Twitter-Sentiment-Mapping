@@ -59,7 +59,7 @@ def minimal_radius(country: str) -> float:
     for point in extremal_points:
         possible_radiuses.append(distance.geodesic(point, center).km)
 
-    radius = min(possible_radiuses)
+    radius = max(possible_radiuses)
 
     return radius
 
@@ -75,13 +75,13 @@ def geocode(countries: List[str]) -> Dict[str, str]:
     geocodes = {}
     for country in tqdm(countries):
         if country == "Ukraine":
-            geocodes[country] = "48.2289622,27.1482283,200km"
+            geocodes[country] = "48.2289622,27.1482283,400km"
         elif country == "Iceland":
-            geocodes[country] = '64.128288,-21.827774,120km'
+            geocodes[country] = '64.128288,-21.827774,240km'
         elif country == 'Kosovo':
-            geocodes[country] = '42.667542,21.166191,50km'
+            geocodes[country] = '42.667542,21.166191,100km'
         elif country == 'Montenegro':
-            geocodes[country] = '42.393097,18.911596,50km'
+            geocodes[country] = '42.393097,18.911596,100km'
         else:
             country_center = get_boundingbox_country(country, output_as='center')
             geocodes[country] = f'{country_center[0]},{country_center[1]},{minimal_radius(country)}km'
