@@ -1,4 +1,4 @@
-# twitter-Sentiment-Mapping
+# Twitter-Sentiment-Mapping
 
 **This project enables the creation of opinion/sentiment maps of European countries (possibly on a specific topic) from a sentiment analysis of tweets.**
 
