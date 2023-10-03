@@ -11,7 +11,7 @@ This project is composed of several steps:
 
 ## Results
 
-Here is and examples of maps that can be obtained with this code.
+Here are some examples of maps that can be obtained with this code.
 
 Here is a map obtained on December 20, 2022, just after the World Cup in Qatar by **filtering tweets containing the word Qatar**. This map was built by collecting 1000 tweets for each country.
 
